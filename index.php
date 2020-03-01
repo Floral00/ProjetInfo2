@@ -1,5 +1,5 @@
 <?php
-include("Initialiser.php");
+include("initialiser.php");
 ?>
 
 <!DOCTYPE html>
@@ -11,7 +11,7 @@ include("Initialiser.php");
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>King Of Beer</title>
+  <title>Accueil</title>
 
   <!-- CSS -->
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">

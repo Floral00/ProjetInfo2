@@ -1,5 +1,5 @@
 <?php
-  include("Parametres.php");
+  include("parametres.php");
 
   // Connexion au serveur MySQL
   $id=mysqli_connect($host,$user,$pass);

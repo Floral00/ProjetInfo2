@@ -1,73 +1,192 @@
 <?php
-  include("Parametres.php");
-
-  // Connexion au serveur MySQL
-  $id=mysqli_connect($host,$user,$pass) or die("Impossible de se connecter au serveur : $host");
-
-  // Suppression / Création / Sélection de la base de données : $base
-  $resultat=mysqli_query($id, "DROP DATABASE IF EXISTS $base");
-  $resultat=mysqli_query($id, "CREATE DATABASE $base");
-  mysqli_select_db($id, $base) or die("Impossible de sélectionner la base : $base");
 
 
-  // Création de la table BARS
-  // Remarque : il est inutile de supprimer la table au préalable,
-  //            la base de données venant juste d'être créée
-  //            [ mysqli_query($id, "DROP TABLE IF EXISTS BARS;"); ]
+// Connexion au serveur MySQL
+$id=mysqli_connect('localhost:3306',"root","root") or die("Impossible de se connecter au serveur : localhost:3306");
 
-  $resultat=mysqli_query($id, "CREATE TABLE BARS 
-                         
-						 (id_BARS int(20) not null,
-						 nom char(20),
-						 primary key(id_BARS)
-	  	       ) ;");
+$resultat=mysqli_query($id, "DROP DATABASE IF EXISTS ProjetInfo");
+$resultat=mysqli_query($id, "CREATE DATABASE ProjetInfo");
+mysqli_select_db($id, "ProjetInfo") or die("Impossible de selectionner la base : ProjetInfo");
 
-  // Insertions des 9 matières des bars de Nancy
-  $resultat=mysqli_query($id, "INSERT INTO BARS (id_BARS, nom)VALUES ('1','MAC Carthy');");
-  $resultat=mysqli_query($id, "INSERT INTO BARS (id_BARS, nom)VALUES ('2','Les Arcades');");
-  $resultat=mysqli_query($id, "INSERT INTO BARS (id_BARS, nom)VALUES ('3','La Quincaillerie');");
-  $resultat=mysqli_query($id, "INSERT INTO BARS (id_BARS, nom)VALUES ('4','Le Berthom');");
-  $resultat=mysqli_query($id, "INSERT INTO BARS (id_BARS, nom)VALUES ('5','Le Gavroche');");
-  
-  
-  $resultat=mysqli_query($id, "CREATE TABLE BIERES 
-                         
-						 (id_BIERES int(20) not null,
-						 nom char(20),
-						 prix char(20),
-						 primary key(id_BIERES)
-	  	       ) ;");
+$resultat=mysqli_query($id, "
+    CREATE TABLE Personne
+        (  
+            Personne_ID int(20) not null,
+            Mail char(20) not null,
+            Password char(100) not null,
+            Prenom char(20) not null,
+            Nom char(20) not null,
+            Adresse  char(20) not null,
+            Portable char(20) not null,
+            
+            primary key(Personne_ID)
+        )"
+);
 
-  // Insertions des 9 matières des bières 
-  $resultat=mysqli_query($id, "INSERT INTO BIERES (id_BIERES, nom, prix)VALUES ('1','Chouffe','8€');");
-  $resultat=mysqli_query($id, "INSERT INTO BIERES (id_BIERES, nom, prix)VALUES ('2','Cuvée des Trolls','7,50€');");
-  $resultat=mysqli_query($id, "INSERT INTO BIERES (id_BIERES, nom, prix)VALUES ('3','Paix Dieu','8€');");
-  $resultat=mysqli_query($id, "INSERT INTO BIERES (id_BIERES, nom, prix)VALUES ('4','Kriek','6€');");
-  $resultat=mysqli_query($id, "INSERT INTO BIERES (id_BIERES, nom, prix)VALUES ('5','Pils','4,50€');");
-  $resultat=mysqli_query($id, "INSERT INTO BIERES (id_BIERES, nom, prix)VALUES ('6','Leffe','6€');");
-  $resultat=mysqli_query($id, "INSERT INTO BIERES (id_BIERES, nom, prix)VALUES ('7','Triple Karmeliet','7€');");
-  $resultat=mysqli_query($id, "INSERT INTO BIERES (id_BIERES, nom, prix)VALUES ('8','Kwak','6,50€');");
-  $resultat=mysqli_query($id, "INSERT INTO BIERES (id_BIERES, nom, prix)VALUES ('9','Kasteel','6,50€');");
 
-   $resultat=mysqli_query($id, "CREATE TABLE HAPPYHOUR 
-                         
-						 (id_HAPPYHOUR int(20) not null,
-						 heure char(20),
-						 primary key(id_HAPPYHOUR)
-	  	       ) ;");
-  // Insertions des 3 matières des happy hours
-  $resultat=mysqli_query($id, "INSERT INTO HAPPYHOUR (id_HAPPYHOUR, heure)VALUES ('1','17h-20h');");	
-  $resultat=mysqli_query($id, "INSERT INTO HAPPYHOUR (id_HAPPYHOUR, heure)VALUES ('2','19h-21h');");
-  $resultat=mysqli_query($id, "INSERT INTO HAPPYHOUR (id_HAPPYHOUR, heure)VALUES ('3','20h-22h');");  
-  
-   $resultat=mysqli_query($id, "CREATE TABLE DIFBIEREBAR
-						 (id_BARS int(20) not null,
-						 id_BIERES int(20),
-						 primary key(id_BARS,id_BIERES)
-	  	       ) ;");
-			   
-   $resultat=mysqli_query($id, "INSERT INTO DIFBIEREBAR(id_BARS,id_BIERES) VALUES
-		
+
+$resultat=mysqli_query($id, "
+    CREATE TABLE Commande
+        (
+            Commande_ID int(20) not null,
+            Date_Commande int(20) not null,
+            status int(20) not null,
+            primary key(Commande_ID)
+       )"
+);
+
+
+$resultat=mysqli_query($id, "
+    CREATE TABLE Produit 
+        (      
+            Produit_ID int(20) not null,
+            Libelle char(20) not null,
+            Prix int(20) not null,
+            primary key(Produit_ID)
+        )"
+);
+
+$resultat=mysqli_query($id, "
+    CREATE TABLE Restaurant
+        (
+            Restaurant_ID int(20) not null,
+            Nom char(20) not null,
+            Adresse char(20) not null,
+            `Code Postale` int(10) not null,
+            Ville char(20) not null,
+            Mail char(40) not null,
+            Telephone char(20) not null,
+            primary key(Restaurant_ID)
+        )"
+);
+
+//CrÃ©ation des diffÃ©rents restaurants
+$resultat=mysqli_query($id, "
+        INSERT INTO Restaurant(Restaurant_ID,Nom,Adresse,`Code Postale`,Ville,Mail,Telephone) VALUES
+                                        (
+                                        '1',
+                                        'Pizza Buffet',
+                                        '20 Rue Jean Mermoz',
+                                        '54500',
+                                        'Vandoeuvre-lÃ¨s-Nancy',
+                                        'mailPizzaBuffet@gmail.com',
+                                        '03 83 96 19 17'
+                                        )
+");
+$resultat=mysqli_query($id, "
+        INSERT INTO Restaurant(Restaurant_ID,Nom,Adresse,`Code Postale`,Ville,Mail,Telephone) VALUES
+                                        (
+                                        '2',
+                                        'Five Pizza',
+                                        '7 Rue de Remich',
+                                        '54500',
+                                        'Vandoeuvre-lÃ¨s-Nancy',
+                                        'mailFivePizza@gmail.com',
+                                        '03 83 56 32 27'
+                                        )
+");
+$resultat=mysqli_query($id, "
+        INSERT INTO Restaurant(Restaurant_ID,Nom,Adresse,`Code Postale`,Ville,Mail,Telephone) VALUES
+                                        (
+                                        '3',
+                                        'Regalo Pizza',
+                                        '42 Rue KÃ©bler',
+                                        '54000',
+                                        'Nancy',
+                                        'mailRegaloPizza@gmail.com',
+                                        '03 83 40 79 34'
+                                        )
+");
+$resultat=mysqli_query($id, "
+        INSERT INTO Restaurant(Restaurant_ID,Nom,Adresse,`Code Postale`,Ville,Mail,Telephone) VALUES
+                                        (
+                                        '4',
+                                        'Chez Yassin',
+                                        '167 Avenue du GÃ©nÃ©ral Leclerc',
+                                        '54500',
+                                        'Vandoeuvre-lÃ¨s-Nancy',
+                                        'mailChezYassin@gmail.com',
+                                        '06 18 89 06 85'
+                                        )
+");
+$resultat=mysqli_query($id, "
+        INSERT INTO Restaurant(Restaurant_ID,Nom,Adresse,`Code Postale`,Ville,Mail,Telephone) VALUES
+                                        (
+                                        '5',
+                                        'Mario Kebab',
+                                        '4 Rue Aristide Briand',
+                                        '54500',
+                                        'Vandoeuvre-lÃ¨s-Nancy',
+                                        'mailMarioKebab@gmail.com',
+                                        '03 83 56 55 30'
+                                        )
+");
+$resultat=mysqli_query($id, "
+    CREATE TABLE Categorie
+         (
+             Categorie_ID int(20) not null,
+             Nom char(20),
+             primary key(Categorie_ID)
+        )"
+);
+//CrÃ©ation des diffÃ©rentes catÃ©gories
+$resultat=mysqli_query($id, "
+        INSERT INTO Categorie(Categorie_ID,Nom) VALUES
+                                        (
+                                        '1',
+                                        'Kebab'
+                                        )
+");
+$resultat=mysqli_query($id, "
+        INSERT INTO Categorie(Categorie_ID,Nom) VALUES
+                                        (
+                                        '2',
+                                        'Pizzeria'
+                                        )
+");
+$resultat=mysqli_query($id, "
+        INSERT INTO Categorie(Categorie_ID,Nom) VALUES
+                                        (
+                                        '2',
+                                        'Fast Food'
+                                        )
+");
+$resultat = mysqli_query($id, " 
+    CREATE TABLE Passer
+        (   
+            Personne_ID int(20) not null,
+            Commande_ID int(20) not null, 
+            primary key(Personne_ID, Commande_ID)
+        )
+");
+$resultat = mysqli_query($id, " 
+    CREATE TABLE Prepare
+        (   
+            Produit_ID int(20) not null,
+            Restaurant_ID int(20) not null, 
+            primary key(Produit_ID, Restaurant_ID)
+        )
+");
+$resultat = mysqli_query($id, " 
+    CREATE TABLE Appartient
+        (   
+            Categorie_ID int(20) not null,
+            Restaurant_ID int(20) not null, 
+            primary key(Categorie_ID, Restaurant_ID)
+        )
+");
+$resultat = mysqli_query($id, " 
+    CREATE TABLE Contient
+        (   
+            Produit_ID int(20) not null,
+            Commande_ID int(20) not null, 
+            primary key(Produit_ID, Commande_ID)
+        )
+");
+
+   /*
+$resultat=mysqli_query($id, "INSERT INTO DIFBIEREBAR(id_BARS,id_BIERES) VALUES
+
 		('1','1'),
 		('1','2'),
 		('1','6'),
@@ -88,26 +207,13 @@
 		('4','6'),
 		('4','7'),
 		('4','8'),
-		('4','9'),	
+		('4','9'),
 		('5','2'),
 		('5','3'),
 		('5','7'),
 		('5','8'),
 		('5','9')
 			;");
-		
-   $resultat=mysqli_query($id, "CREATE TABLE DIFHAPPYHOURBAR
-						 (id_BARS int(20) not null,
-						 id_HAPPYHOUR int(20),
-						 primary key(id_BARS,id_HAPPYHOUR)
-	  	       ) ;");
-			   
-   $resultat=mysqli_query($id, "INSERT INTO DIFHAPPYHOURBAR(id_BARS,id_HAPPYHOUR) VALUES
-	
-	
-		('1','2'),
-		('2','1'),		
-		('3','3'),
-		('4','2')
-		    ;");   
+*/
+
 ?>

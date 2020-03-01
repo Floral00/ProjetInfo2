@@ -2,12 +2,12 @@
 
   // Parametres de configuration de la connexion
   // -> permet de porter l'application en ne modifiant qu'une seule fois
-  //	les paramétres de connexions à un serveur MySQL
+  //	les paramï¿½tres de connexions ï¿½ un serveur MySQL
 
   $host="localhost:3306";
   $user="root";
-  $pass="";
-  $base="joseph";
+  $pass="root";
+  $base="ProjetInfo";
 
 
  ?>
